@@ -42,15 +42,16 @@ async function run() {
         // Auth related APIs
         app.post('/jwt', async (req, res) => {
             const user = req.body;
-            const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '5h' });
+
             res
                 .cookie('token', token, {
                     httpOnly: true,
-                    secure: false, // http://localhost:5173/signIn
-
+                    secure: false,
                 })
-                .send({ success: true });
-        })
+                .send({ success: true })
+
+        });
 
         // jobs related APIs
         app.get('/jobs', async (req, res) => {
@@ -83,9 +84,7 @@ async function run() {
         app.get('/job-application', async (req, res) => {
             const email = req.query.email;
             const query = { applicant_email: email }
-
-            console.log('cuk cuk cookies', req.cookies);
-
+            console.log('cuk cuk tokoto ', req.cookies);
             const result = await jobApplicationCollection.find(query).toArray();
 
             // fokira way to aggregate data
