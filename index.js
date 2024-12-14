@@ -41,12 +41,12 @@ async function run() {
             const user = req.body;
             const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
             res
-                .cookie('token', token, {
-                    httpOnly: true,
-                    secure: false, // http://localhost:5173/signIn
-                    sameSite: 'none'
-                })
-                .send({ success: true });
+            .cookie('token', token, {
+                httpOnly: true,
+                secure: false, // http://localhost:5173/signIn
+                sameSite: 'none'
+            })
+            .send({success: true});
         })
 
         // jobs related APIs
