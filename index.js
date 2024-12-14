@@ -8,7 +8,10 @@ require('dotenv').config()
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173'],
+    credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -41,12 +44,12 @@ async function run() {
             const user = req.body;
             const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
             res
-            .cookie('token', token, {
-                httpOnly: true,
-                secure: false, // http://localhost:5173/signIn
-                sameSite: 'none'
-            })
-            .send({success: true});
+                .cookie('token', token, {
+                    httpOnly: true,
+                    secure: false, // http://localhost:5173/signIn
+
+                })
+                .send({ success: true });
         })
 
         // jobs related APIs
@@ -80,6 +83,9 @@ async function run() {
         app.get('/job-application', async (req, res) => {
             const email = req.query.email;
             const query = { applicant_email: email }
+
+            console.log('cuk cuk cookies', req.cookies);
+
             const result = await jobApplicationCollection.find(query).toArray();
 
             // fokira way to aggregate data
